@@ -1,25 +1,35 @@
 import graphene
 from budgeting.firebase_config import db
 
-class BudgetType(graphene.ObjectType):
+class TransactionType(graphene.ObjectType):
     id = graphene.String()
     name = graphene.String()
     amount = graphene.Float()
+    category = graphene.String()
+    transaction_type = graphene.String()
     created_at = graphene.String()
 
 class Query(graphene.ObjectType):
-    all_budgets = graphene.List(BudgetType)
+    all_transactions = graphene.List(TransactionType)
 
-    def resolve_all_budgets(root, info):
-        budgets = db.collection('budgets').stream()
+    def resolve_all_transactions(root, info):
+        transactions = db.collection('transactions').stream()
+        print("Firestore Documents:")
+        for doc in transactions:
+            print(doc.id, doc.to_dict())
+
+        transactions = db.collection('transactions').stream()
+
         return [
-            BudgetType(
+            TransactionType(
                 id=doc.id,
                 name=doc.to_dict().get('name'),
                 amount=doc.to_dict().get('amount'),
+                category=doc.to_dict().get('category'),
+                transaction_type=doc.to_dict().get('transaction_type'),
                 created_at=doc.to_dict().get('created_at')
             )
-            for doc in budgets
+            for doc in transactions
         ]
 
 schema = graphene.Schema(query=Query)
