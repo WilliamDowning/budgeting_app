@@ -1,20 +1,14 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 import os
+from decouple import config
 
-# Define the path to your Firebase key file
-key_path = os.path.join(
-    os.path.dirname(__file__),  # Get the directory of the current file
-    "../user_credentials/firebase_key.json"  # Relative path to the key
-)
 
-# Initialize Firebase app if not already initialized
-if not firebase_admin._apps:
-    cred = credentials.Certificate(key_path)
-    firebase_admin.initialize_app(cred)
-
-# Initialize Firestore client
+key_path = config("FIREBASE_KEY_PATH")
+cred = credentials.Certificate(key_path)
+firebase_admin.initialize_app(cred)
 db = firestore.client()
+
 
 
 def save_transaction_to_firestore(transaction):

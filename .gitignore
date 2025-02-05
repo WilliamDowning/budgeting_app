@@ -1,6 +1,6 @@
-budgevenv/
 user_credentials/
 __pycache__/
 *.pyc
 .env
 db.sqlite3
+.venv/
