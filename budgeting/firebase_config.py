@@ -3,14 +3,14 @@ from firebase_admin import credentials, firestore
 import os
 from decouple import config
 
-
+##Grabs the path of firebase key, stores the credentials and creates the database connection
 key_path = config("FIREBASE_KEY_PATH")
 cred = credentials.Certificate(key_path)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-
+## Saves any transaction based on data object variables, then sends transaction to firestore
 def save_transaction_to_firestore(transaction):
     """Save a transaction to Firestore"""
 
