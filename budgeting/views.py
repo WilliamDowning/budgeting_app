@@ -46,10 +46,13 @@ def edit_transaction(request, transaction_id):
     transaction = get_object_or_404(Transaction, id=transaction_id)
     if request.method == "POST":
         form = TransactionForm(request.POST, instance=transaction)
-        if form.is_valid():
-            transaction = form.save(commit=False)
-            transaction.save()
-            update_transaction_in_firestore(transaction)
+        if (form.is_valid()) and (form.has_changed()):
+                transaction = form.save(commit=False)
+                transaction.save()
+                update_transaction_in_firestore(transaction)
+                return redirect("transaction_list")
+        else:
+            print("Form is not valid or has not changed.")
             return redirect("transaction_list")
     else:
         form = TransactionForm(instance=transaction)

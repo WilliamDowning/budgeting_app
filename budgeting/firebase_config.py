@@ -28,7 +28,6 @@ def save_transaction_to_firestore(transaction):
 
 def update_transaction_in_firestore(transaction):
     """Update a transaction in Firestore"""
-
     data = {
         "name" : transaction.name,
         "category" : transaction.category,
@@ -36,6 +35,7 @@ def update_transaction_in_firestore(transaction):
         "transaction_type" : transaction.transaction_type,
         "created_at" : transaction.created_at.isoformat(),
     }
+
     doc_ref = db.collection("transactions").document(transaction.id)
     doc_ref.update(data)
 
