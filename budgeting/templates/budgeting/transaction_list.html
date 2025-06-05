@@ -9,11 +9,41 @@
     <h1>Transaction List</h1>
     <ul>
         {% for transaction in transactions %}
-            <li>
+            <li id="transaction-{{ transaction.id }}">
                 {{ transaction.name }} - ${{ transaction.amount }} ({{ transaction.category }})
+                <a href="{% url 'edit_transaction' transaction.id %}">Edit</a>
+                <button onclick="deleteTransaction('{{ transaction.id }}')">Delete</button>
             </li>
         {% endfor %}
     </ul>
     <a href="{% url 'add_transaction' %}">Add New Transaction</a>
+
+    <script>
+        function deleteTransaction(transactionId) {
+            if (confirm("Are you sure you want to delete this transaction?")) {
+                const formData = new FormData();
+                formData.append("transaction_id", transactionId);
+
+                fetch("", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: formData,
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Remove the transaction from the DOM
+                        const transactionElement = document.getElementById(`transaction-${transactionId}`);
+                        if (transactionElement) {
+                            transactionElement.remove();
+                        }
+                    } else {
+                        alert("Failed to delete the transaction.");
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 </html>
